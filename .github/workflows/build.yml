@@ -22,6 +22,7 @@ jobs:
       with:
         version: ${{ env.QT_VERSION }}
     - uses: actions/checkout@v2
+    - uses: timangus/cpp-problem-matcher@master
     - name: Compile
       run: cmake -B build && cmake --build build --parallel
       env:
@@ -45,6 +46,7 @@ jobs:
       with:
         version: ${{ env.QT_VERSION }}
     - uses: actions/checkout@v2
+    - uses: timangus/cpp-problem-matcher@master
     - name: Compile
       run: cmake -B build && cmake --build build --parallel
       env:
