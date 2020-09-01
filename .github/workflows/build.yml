@@ -4,10 +4,40 @@ env:
   QT_VERSION: 5.15.0
 
 jobs:
-  linux:
-    name: Linux
+  clang:
+    name: clang
     runs-on: ubuntu-16.04
     steps:
+    - name: Install Tools
+      run: |
+        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+        sudo apt install libc++-10-dev libc++1-10 libc++abi-10-dev libc++abi1-10
+        sudo apt install clang-tidy-10 cppcheck
+        curl -vL https://downloads.kdab.com/clazy/1.6/Clazy-x86_64-1.6.AppImage -o clazy
+        chmod +x clazy
+        sudo mv clazy /usr/local/bin/
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{ env.QT_VERSION }}
+    - uses: actions/checkout@v2
+    - name: Compile
+      run: cmake -B build && cmake --build build --parallel
+      env:
+        CC: clang-10
+        CXX: clang++-10
+  gcc:
+    name: gcc
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Install Tools
+      run: |
+        sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+        sudo apt install libc++-10-dev libc++1-10 libc++abi-10-dev libc++abi1-10
+        sudo apt install clang-tidy-10 cppcheck
+        curl -vL https://downloads.kdab.com/clazy/1.6/Clazy-x86_64-1.6.AppImage -o clazy
+        chmod +x clazy
+        sudo mv clazy /usr/local/bin/
     - name: Install Qt
       uses: jurplel/install-qt-action@v2
       with:
