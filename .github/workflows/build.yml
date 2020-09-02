@@ -48,7 +48,9 @@ jobs:
     - uses: actions/checkout@v2
     - uses: timangus/cpp-problem-matcher@master
     - name: Compile
-      run: cmake -B build && cmake --build build --parallel
+      run: |
+        cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -B build && cmake --build build --parallel
+        clazy --standalone -p build/compile_commands.json -checks=level2 main.cpp
       env:
         CC: gcc-9
         CXX: g++-9

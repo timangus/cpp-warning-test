@@ -34,5 +34,9 @@ int main(int argc, char *argv[])
     }, Qt::QueuedConnection);
     engine.load(url);
 
+    QString a = "blah";
+    QString b = "foo";
+    QString("%1 %2").arg(a).arg(b);
+
     return app.exec();
 }
