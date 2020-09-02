@@ -11,10 +11,37 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wall -Wextra -Wcast-align -Wcast-qual \
-    -Wdisabled-optimization -Wformat=2 -Winit-self \
-    -Wmissing-include-dirs -Wold-style-cast -Woverloaded-virtual \
-    -Wnon-virtual-dtor -Wredundant-decls -Wshadow")
+if(UNIX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wpedantic -Wall -Wextra -Wcast-align -Wcast-qual \
+        -Wdisabled-optimization -Wformat=2 -Winit-self \
+        -Wmissing-include-dirs -Wold-style-cast -Woverloaded-virtual \
+        -Wnon-virtual-dtor -Wredundant-decls -Wshadow")
+endif()
+
+if(MSVC)
+    add_definitions(-DUNICODE -D_UNICODE)
+
+    # MSVC is picky with UTF8 files recognition so force it on
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /utf-8")
+    # Disable large numbers of encoding warnings for boost with utf8 encoding on
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4828")
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250 /wd4996")
+
+    set(VC_ANALYZE_FLAGS "/analyze /analyze:ruleset \
+        ${CMAKE_SOURCE_DIR}\\scripts\\VCAnalyze.ruleset")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${VC_ANALYZE_FLAGS}")
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} \
+        /DYNAMICBASE /NXCOMPAT /MAP /debug")
+    set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} \
+        /MAP /debug")
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} \
+        /permissive- \
+        /Zc:rvalueCast /Zc:inline /Zc:strictStrings \
+        /Zc:wchar_t /Zc:throwingNew")
+endif()
 
 set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=-*,readability-*)
 set(CMAKE_CXX_CPPCHECK cppcheck --enable=all)
