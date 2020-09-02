@@ -28,6 +28,8 @@ if(MSVC)
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4250 /wd4996")
 
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+
     set(VC_ANALYZE_FLAGS "/analyze /analyze:ruleset \
         ${CMAKE_SOURCE_DIR}\\scripts\\VCAnalyze.ruleset")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${VC_ANALYZE_FLAGS}")
