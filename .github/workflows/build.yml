@@ -52,3 +52,16 @@ jobs:
       env:
         CC: gcc-9
         CXX: g++-9
+  windows:
+    name: Windows
+    runs-on: windows-2019
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v2
+      with:
+        version: ${{ env.QT_VERSION }}
+    - uses: actions/checkout@v2
+    - uses: ilammy/msvc-dev-cmd@v1
+    - uses: timangus/cpp-problem-matcher@master
+    - name: Compile
+      run: cmake -B build && cmake --build build --parallel
